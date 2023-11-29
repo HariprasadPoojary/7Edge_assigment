@@ -17,6 +17,10 @@ def save_user_to_db(user_data: dict):
     ...
 
 
+def update_order_in_db(order_data: dict):
+    ...
+
+
 # APP Views
 class API(Resource):
     def post(self):
@@ -30,8 +34,8 @@ class API(Resource):
                         send_email(request_data)
 
                         return {"success": "Order has been processed!"}, 200
-                else:
-                    return {"error": "Amount is missing in the request!"}, 406
+
+                return {"error": "Amount is missing in the request!"}, 406
 
             case "new_user":
                 if user_type := request_data.get("user_type"):
@@ -50,10 +54,22 @@ class API(Resource):
                                     send_email(request_data)
 
                         return {"success": "User has been processed!"}, 200
-                else:
-                    return {"error": "user_type is missing in the request!"}, 406
-            
-            case 
+
+                return {"error": "user_type is missing in the request!"}, 406
+
+            case "order_shipped":
+                send_email(request_data)
+
+                return {
+                    "success": f"Order info sent to the User to email: {request_data['customer_email']}"
+                }, 200
+
+            case "order_delivered":
+                if status := request_data.get("status"):
+                    if status == "delivered":
+                        update_order_in_db(request_data)
+
+                return {"error": "status is missing in the request!"}, 406
 
         return {"hello": "world"}
 
