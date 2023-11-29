@@ -13,6 +13,10 @@ def send_email(order_data: dict):
     ...
 
 
+def save_user_to_db(user_data: dict):
+    ...
+
+
 # APP Views
 class API(Resource):
     def post(self):
@@ -30,7 +34,26 @@ class API(Resource):
                     return {"error": "Amount is missing in the request!"}, 406
 
             case "new_user":
-                ...
+                if user_type := request_data.get("user_type"):
+                    if user_type == "premium":
+                        save_user_to_db(request_data)
+
+                        return {"success": "User has been processed!"}, 200
+                elif condition := request_data.get("conditions"):
+                    if user_type := condition.get("user_type"):
+                        if user_type == "premium":
+                            jobs_to_execute = request_data.get("jobs")
+                            for job in jobs_to_execute:
+                                if "Database" in job:
+                                    save_user_to_db(request_data)
+                                if "Email" in job:
+                                    send_email(request_data)
+
+                        return {"success": "User has been processed!"}, 200
+                else:
+                    return {"error": "user_type is missing in the request!"}, 406
+            
+            case 
 
         return {"hello": "world"}
 
