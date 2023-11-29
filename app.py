@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_restful import Api, Resource, request
 
-from .database_connector import save_order_to_db, save_user_to_db, update_order_in_db
+from database_connector import save_order_to_db, save_user_to_db, update_order_in_db
 
 app = Flask(__name__)
 api = Api(app)
