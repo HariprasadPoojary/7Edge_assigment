@@ -21,6 +21,14 @@ def update_order_in_db(order_data: dict):
     ...
 
 
+def send_comment_to_system(comment_data: dict):
+    ...
+
+
+def update_payment_status(payment_data: dict):
+    ...
+
+
 # APP Views
 class API(Resource):
     def post(self):
@@ -71,7 +79,11 @@ class API(Resource):
 
                 return {"error": "status is missing in the request!"}, 406
 
-        return {"hello": "world"}
+            case "new_comment":
+                send_comment_to_system(request_data)
+
+            case "payment_failed":
+                update_payment_status(request_data)
 
 
 # APP Routings/URL
