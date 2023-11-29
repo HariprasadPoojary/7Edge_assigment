@@ -1,23 +1,13 @@
 from flask import Flask
 from flask_restful import Api, Resource, request
 
+from .database_connector import save_order_to_db, save_user_to_db, update_order_in_db
+
 app = Flask(__name__)
 api = Api(app)
 
 
-def save_order_to_db(order_data: dict):
-    ...
-
-
 def send_email(order_data: dict):
-    ...
-
-
-def save_user_to_db(user_data: dict):
-    ...
-
-
-def update_order_in_db(order_data: dict):
     ...
 
 
@@ -48,7 +38,9 @@ class API(Resource):
             case "new_user":
                 if user_type := request_data.get("user_type"):
                     if user_type == "premium":
-                        save_user_to_db(request_data)
+                        save_user_to_db(
+                            {"user_id": request_data["user_id"], "user_type": user_type}
+                        )
 
                         return {"success": "User has been processed!"}, 200
                 elif condition := request_data.get("conditions"):
@@ -57,7 +49,9 @@ class API(Resource):
                             jobs_to_execute = request_data.get("jobs")
                             for job in jobs_to_execute:
                                 if "Database" in job:
-                                    save_user_to_db(request_data)
+                                    save_user_to_db(
+                                        {"user_id": request_data["user_id"], "user_type": user_type}
+                                    )
                                 if "Email" in job:
                                     send_email(request_data)
 
